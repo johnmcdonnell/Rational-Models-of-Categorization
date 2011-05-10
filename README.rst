@@ -13,46 +13,68 @@ over the number of mixture components is given via a Dirichlet distribution.
 
 They bear a strong resemblance to naive Bayes.
 
+Requirements
+------------
+These should all run in `Python`_ >= 2.5, with `numpy`_ and `scipy`_. The
+plotting in some o the demos will require `matplotlib`_.
+
+.. _Python: http://www.python.org
+.. _numpy: http://www.numpy.org
+.. _scipy: http://www.scipy.org
+.. _matplotlib: http://matplotlib.sourceforge.net
+
 
 The original: rational.py
 -------------------------
 Anderson's original model is available here. The demo performs the task that is
-walked through in Figure 1 in [Anderson (1991)]_, in which he runs the model on
-the classic [Medin & Schaffer (1978)]_ task.
+walked through in Figure 1 in Anderson (1991) [Anderson]_, in which he runs the model on
+the classic Medin & Schaffer (1978) [MedSchaff]_ task.
 
 Becuase this model was developed before advanced techniques for approximating
 intractable Bayesian posteriors were in wide use, the model views stimuli
 sequentially and assigns them deterministically to the cluster that was most
 likely to have generated them.
 
-.. [Anderson (1991)] Anderon, J. R. (1991). "The adaptive nature of human
-   categorization." Psychological Review, 98:409-429.
+.. [Anderson] Anderon, J. R. (1991). "The adaptive nature of human
+   categorization." *Psychological Review*, **98**:409-429.
 
-.. [Medin & Schaffer (1978)] Medin, D. L. and Schaffer, M. M. (1978). "Context
-   Theory of Classification Learning." Psychological Review, 85:207-238.
+.. [MedSchaff] Medin, D. L. and Schaffer, M. M. (1978). "Context
+   Theory of Classification Learning." *Psychological Review*, **85**:207-238.
 
 
 The "more rational" model.
 --------------------------
-Recently, Sanborn, Griffiths and Navarro [(2006)]_ brought the model up to date
-with two methods for approximating the full posterior over possible partitions
-of the stimuli. I have implemented the basic model in the document particle.py,
-and implemented each of these approximation methods as extensions. Since the
-Anderson model is a special use of the "more rational" model, it can also be
-run here.
+Recently, Sanborn, Griffiths and Navarro (2006) [sgn]_ brought the model up to
+date with two methods for approximating the full posterior over possible
+partitions of the stimuli. I have implemented the basic model in the document
+``particle.py``, and implemented each of these approximation methods as
+extensions. Since the Anderson model is a special use of the "more rational"
+model, it can also be run here. Psychologists are particularly interested in
+the particle filter because it operates on-line, which is generally taken as a
+necessity for a Psychologically plausible algorithm.
 
 Gibbs Sampling 
     All items are assigned arbitrarily. Sampling proceeds by removing each item
     one by one and relabeling it probabilistically. In the limit, the
     likelihood of a given partition of the stimuli is given by the number of
-    times it is visited. I have implemented this in GibbsSampler.py.
+    times it is visited. I have implemented this in ``GibbsSampler.py``.
+    Running the script launches a demo, which runs the sampler for a few
+    hundred iterations on the Zeithamova and Maddox (2009) [zm]_ dataset,
+    printing out its partition at each stage.
     
 Particle filtering.
     Items are viewed sequentially, as in the Anderson (1991) model, but the
     model tracks many hypotheses about the correct partition, and at each stage
     resamples from its own existing samples. I have implemented this in
-    filter.py.
+    ``filter.py``. Running this script launches a demo which runs the [zm]_
+    task with 6 particles, plotting each particle's partition at the end.
 
-.. [(2006)] Sanborn, A. N., Griffiths T. L., and Navarro, D. J. (2006)
-   "A More Rational Model of Categorization." Proceedings of the 28th Annual
-   Conference of the Cognitive Science Society.
+.. [sgn] Sanborn, A. N., Griffiths T. L., and Navarro, D. J. (2006).
+   "A More Rational Model of Categorization." *Proceedings of the 28th Annual
+   Conference of the Cognitive Science Society*.
+
+.. [zm] Zeithamova, D. and Maddox, W. T. (2009). "Learning mode and exemplar
+   sequencing in unsupervised category learning." *Journal of Experimental
+   Psychology: Learning, Memory, and Cognition*, **35**:731-757.
+
+Demo
