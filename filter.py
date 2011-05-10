@@ -3,7 +3,6 @@
 # Implemented in python by John McDonnell, 2010
 # Many thanks to Sanborn et al. for developing it and sharing their Matlab implementation.
 
-from pylab import *
 import numpy as np
 import numpy.random as nprand
 import copy
@@ -100,10 +99,10 @@ def testparticle():
     types = 'cc'
     
     Cparam = .65
-    mu0 = mean( stims, 0 )
-    sigma0 = var( stims, 0 )
-    lambda0 = ones( len(stims[0]) )
-    a0 = ones( len(stims[0]) )
+    mu0 = np.mean( stims, 0 )
+    sigma0 = np.var( stims, 0 )
+    lambda0 = np.ones( len(stims[0]) )
+    a0 = np.ones( len(stims[0]) )
     
     args = [Cparam, mu0, sigma0, lambda0, a0, types]
     m = 6  # Just one particle for demonstration purposes.
