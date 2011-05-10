@@ -1,8 +1,7 @@
 # Gibbs Sampler.
-# The important difference between this and the other implementations of the rational 
-# model is that it has been refactored to use a format for holding the clusters 
-# similar to that used by Sanborn et al. in their Matlab code.
-# This makes more sense because it is not incremental, it just leaves one out repeatedly.
+#
+# Implemented in python by John McDonnell, 2010
+# Many thanks to Sanborn et al. for developing it and sharing their Matlab implementation.
 
 
 import os

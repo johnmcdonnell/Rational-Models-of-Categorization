@@ -1,3 +1,8 @@
+# Particle filter, posterior approximation method for the Anderson rational model.
+#
+# Implemented in python by John McDonnell, 2010
+# Many thanks to Sanborn et al. for developing it and sharing their Matlab implementation.
+
 from pylab import *
 import numpy as np
 import numpy.random as nprand

@@ -59,10 +59,10 @@ Gibbs Sampling
     All items are assigned arbitrarily. Sampling proceeds by removing each item
     one by one and relabeling it probabilistically. In the limit, the
     likelihood of a given partition of the stimuli is given by the number of
-    times it is visited. I have implemented this in ``GibbsSampler.py``.
-    Running the script launches a demo, which runs the sampler for a few
-    hundred iterations on the Zeithamova and Maddox (2009) [zm]_ dataset,
-    printing out its partition at each stage.
+    times it is visited. I have implemented this in ``gibbs.py``.  Running the
+    script launches a demo, which runs the sampler for a few hundred iterations
+    on the Zeithamova and Maddox (2009) [zm]_ dataset, printing out its
+    partition at each stage.
     
 Particle filtering.
     Items are viewed sequentially, as in the Anderson (1991) model, but the

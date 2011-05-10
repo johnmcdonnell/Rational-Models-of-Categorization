@@ -1,8 +1,8 @@
 # Implementation of Anderson's rational model of Categorization:
 # Local MAP: Anderson (1990) and Anderson (1991),
-# It is extended for use as a particle in a particle filter.
-# 
-# This implementation tracks means and variances rather than actual presented stimuli.
+# It can be readily extended to be optimized by a particle filter or Gibbs sampler.
+#
+# Implemented by John McDonnell, 2010
 
 import os
 import numpy as np
