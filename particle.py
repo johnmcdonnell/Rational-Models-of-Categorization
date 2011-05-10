@@ -466,42 +466,18 @@ def testcontinuous():
         #print "Prob vals for ", stims[0][:-1], ": ", model.query(stims[0][:-1] + [-1])
     pl.show()
 
-def test_bayes_discrete():
-    stims = [[1, 1, 1, 1, 1], # Medin & Schaffer (1978)
-             [1, 0, 1, 0, 1], 
-             [1, 0, 1, 1, 0],
-             [0, 0, 0, 0, 0],
-             [0, 1, 0, 1, 1],  
-             [0, 1, 0, 0, 0],]
-    #stims = [[1, 1, 1, 0], # Type II (XOR)
-    #          [1, 1, 0, 0], 
-    #          [0, 0, 0, 0],
-    #          [0, 0, 1, 0], #          [0, 1, 0, 1],  #          [0, 1, 1, 1],
-    #          [1, 0, 0, 1],  
-    #          [1, 0, 1, 1],]
-    #stims = ['0000', '0010', '1101', '1111', '1000', '1011', '0100', '0111'] # Type IV
-    #stims = ['0000', '0010', '1100', '1110', '1001', '1011', '0101', '0111'] # Type II
-    types = 'ddddd'
-    
-    for _ in xrange(1):
-        args = [.5, \
-                np.mean(stims, 0), \
-                np.var(stims, 0), \
-                np.ones(len(stims[0])), \
-                np.ones(len(stims[0])), \
-                types]
-        model = RationalParticle(args, decision="Soft")
-        
-        #shuffle(stims)
-        for s in stims:
-            model.additem_particle( s )
-        print model.partition
-        
-        print "Prob vals for 0,1,0,0,?"
-        print "MAP: " + `model.findMAPval([0, 1, 0, 0,  -1], 'kkkk?')`
-    
-
 def test_anderson_discrete():
+    """
+    Tests the Anderson's ratinal model using the Medin & Schaffer (1978) data.
+    
+    This script will print out the probability that each item belongs to each
+    of the existing clusters or to a new cluster, and the model assign it to
+    the most likely cluster. To see that the model is working correctly, you
+    can follow along with Anderson (1991), which steps through in the same way.
+    
+    The classic Shepard tasks can also be commented out and run.
+    """
+    
     stims = [[1, 1, 1, 1, 1], # Medin & Schaffer (1978)
              [1, 0, 1, 0, 1], 
              [1, 0, 1, 1, 0],
@@ -509,15 +485,15 @@ def test_anderson_discrete():
              [0, 1, 0, 1, 1],  
              [0, 1, 0, 0, 0],]
     types = 'ddddd'
-    #stims = [[1, 1, 1, 0], # Type II (XOR)
-    #          [1, 1, 0, 0], 
-    #          [0, 0, 0, 0],
-    #          [0, 0, 1, 0], #          [0, 1, 0, 1],  #          [0, 1, 1, 1],
-    #          [1, 0, 0, 1],  
-    #          [1, 0, 1, 1],]
+     
+    # Below are the classic Shepard Type II and Type IV datasets.  Uncomment
+    # the one you want to try out; you might want to uncomment shuffling the
+    # stims too if you don't care about order.
     #stims = ['0000', '0010', '1101', '1111', '1000', '1011', '0100', '0111'] # Type IV
     #stims = ['0000', '0010', '1100', '1110', '1001', '1011', '0101', '0111'] # Type II
-    #types = 'dddd'
+    #stims = [[0, 0, 0, 0], [0, 0, 1, 0], [1, 1, 0, 1], [1, 1, 1, 1], [1, 0, 0, 0], [1, 0, 1, 1], [0, 1, 0, 0], [0, 1, 1, 1]] # Type IV
+    stims = [[0, 0, 0, 0], [0, 0, 1, 0], [1, 1, 0, 0], [1, 1, 1, 0], [1, 0, 0, 1], [1, 0, 1, 1], [0, 1, 0, 1], [0, 1, 1, 1]] # Type II
+    types = 'dddd'
     
     for _ in xrange(1):
         args = [.5, \
@@ -528,18 +504,18 @@ def test_anderson_discrete():
                 types]
         model = RationalParticle(args, decision="MAP")
         
-        #shuffle(stims)
+        #random.shuffle(stims)
         for s in stims:
             model.additem_particle( s )
         print model.partition
         
-        print "Prob vals for 0,1,0,0,?"
-        print "MAP: " + `model.findMAPval([0, 1, 0, 0,  -1], 'kkkk?')`
-    
+        query = [0]*(len(stims[0])-1) + [-1]
+        print "Prob vals for ", query
+        print model.findMAPval( query, 'k'*(len(stims[0])-1) + '?' )
+
 
 def main():
     testcontinuous()
-    #test_bayes_discrete()
     #test_anderson_discrete()
 
 #if __name__ != '__main__':
