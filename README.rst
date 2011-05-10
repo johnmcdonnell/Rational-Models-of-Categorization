@@ -16,7 +16,7 @@ They bear a strong resemblance to naive Bayes.
 Requirements
 ------------
 These should all run in `Python`_ >= 2.5, with `numpy`_ and `scipy`_. The
-plotting in some o the demos will require `matplotlib`_.
+plotting in some of the demos will require `matplotlib`_.
 
 .. _Python: http://www.python.org
 .. _numpy: http://www.numpy.org
@@ -26,9 +26,11 @@ plotting in some o the demos will require `matplotlib`_.
 
 The original: rational.py
 -------------------------
-Anderson's original model is available here. The demo performs the task that is
-walked through in Figure 1 in Anderson (1991) [Anderson]_, in which he runs the model on
-the classic Medin & Schaffer (1978) [MedSchaff]_ task.
+Anderson's original model is available here. In Figure 1 of Anderson (1991)
+[Anderson]_ walks through the model's inner workings on each time step as it
+learns the classic Medin & Schaffer (1978) [MedSchaff]_ task. Running the file
+in python launches a demo which performs the same task, finding the same
+answers at each step.
 
 Becuase this model was developed before advanced techniques for approximating
 intractable Bayesian posteriors were in wide use, the model views stimuli
@@ -77,4 +79,3 @@ Particle filtering.
    sequencing in unsupervised category learning." *Journal of Experimental
    Psychology: Learning, Memory, and Cognition*, **35**:731-757.
 
-Demo
