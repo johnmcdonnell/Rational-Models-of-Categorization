@@ -202,8 +202,8 @@ class RationalParticle:
         
         # assumes features are independent, and just multiplies to get current prob.
         return np.product( pjks )  
-    
-    def computeposterior(self, stim, env=None):
+
+    def computeposterior(self, stim, env=None, calcclust=False):
         """
         Take a given item and find the probability it belongs to each existing
         cluster (or a new cluster), p(k|f).
@@ -219,8 +219,7 @@ class RationalParticle:
                         ((1.0-self.c) + self.c * float(self.N))
             
             # for given cluster, compute likelihood of current stimulus
-            pfk[k] = self.stimprob( stim, k ) 
-            
+            #pfk[k] = self.stimprob( stim, k ) 
             # Conditional:
             pfk[k] = self.stimprob( stim, k, env )
         
@@ -229,12 +228,27 @@ class RationalParticle:
         pfk[self.clusters] = self.stimprob( stim, self.clusters ) 
         
         # put it together
-        if sum(pk*pfk) > 0:
-            pkf = (pk*pfk) / float(sum( pk*pfk ))
+        num = pk*pfk
+        denom = sum( num )
+        if denom > 0:
+            pkf = num / denom
         else:
             #raise Exception, "Could not find posterior"
-            # I think this will only arise relatively harmlessly, when there's been a numerical error.erior" 
+            # I think this will only arise relatively harmlessly, when there's
+            # been a numerical error" 
             pkf = np.ones(len(pk))/float(len(pk)) 
+        
+        # Calculate it just for clusters too, this is for filter sampling.
+        if calcclust:
+            clustnum = pk[:self.clusters]*pfk[:self.clusters]
+            clustdenom = sum(clustnum)
+            if clustdenom > 0:
+                clustpkf = np.dot( pk, pfk )
+            else:
+                #raise Exception, "Could not find posterior"
+                # I think this will only arise relatively harmlessly, when there's
+                # been a numerical error" 
+                clustpkf = np.ones(len(pk))/float(len(pk)) 
         
         if VERBOSE:
             print "p(k)s: ", pk
@@ -242,8 +256,13 @@ class RationalParticle:
             print "p(k|f): ", pkf
         
         self.currentposterior = pkf
+        if calcclust:
+            self.clusterposterior = clustpkf
         self.laststim = self.stims[stim]
-        return pkf
+        if not calcclust:
+            return pkf
+        else:
+            return clustpkf
     
     def getposterior (self, stim):
         """

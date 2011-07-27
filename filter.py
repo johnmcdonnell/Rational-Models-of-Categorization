@@ -54,18 +54,32 @@ class particlefilter():
         return res
     
     def iterate(self, stim ):
-        samples = [randrange(self.m) for _ in xrange(self.m) ]  # random sample (with replacement)
-        samplesenum = [[i, samples.count(i)] for i in xrange(self.m)] # counts number of times each particle sampled
+        #for id in xrange( len( self.particles ) ):
+        #    self.particles[id].register_item( stim )
+        #    self.particles[id].computeposterior( stimnum, calcclust=True )
+        
+        posteriors = []
+        for particle in self.particles:
+            stimnum = particle.register_item( stim )
+            posteriors.append( particle.computeposterior( stimnum, calcclust=True ) )
+        
+        # TODO: implement self.ids, useful for aliasing identical particles
+        ppost = posteriors / sum( posteriors )
+        
+        samples = [ int( sum( np.cumsum(ppost) < nprand.random() ) ) for _ in xrange( self.m ) ]
+        samplesenum = [ [id, samples.count(id)] for id in xrange( len(self.particles) ) ]
+        
         newparticles = []
-        for l in samplesenum:
-            if l[1] > 0:
-                # Computing posterior ahead of time:
-                stimnum = self.particles[l[0]].register_item( stim )
-                self.particles[l[0]].computeposterior( stimnum )
-                for i in range(l[1]):
-                    newparticles.append(copy.deepcopy(self.particles[l[0]]))
+        #newids = [] (for aliasing)
+        
+        for id, count in samplesenum:
+            if count > 0:
+                for i in xrange(count):
+                    newparticles.append(copy.deepcopy(self.particles[id]))
                     newparticles[-1].additemBayes( stimnum )
+        
         self.particles = newparticles[:]
+        #self.ids = newids (for aliasing)
 
 def get_zmstims(n):
     """
@@ -91,7 +105,7 @@ def get_zmstims(n):
     labels = withlabels[:,-1]
     return items, labels
 
-def testparticle():
+def testcontinuous():
     #stims = loadtxt( os.popen("awk 'NF==13 {print( $7, $8, $10 )}' data/3.dat") )
     #types='ccc'
     outfile = "/dev/null"
@@ -133,8 +147,7 @@ def testparticle():
 
 
 def main():
-    #testcontinuous()
-    testparticle()
+    testcontinuous()
 
 if __name__ == '__main__':
     main()

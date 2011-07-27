@@ -1,6 +1,6 @@
 
 Todos:
-- Double check the particle filter against the Matlab code from Sanborn et al.
 - Make sure continuous and discrete stimulus dimensions can be mixed safely.
 - Make sure the model performs as expected in the semisupervised case.
+- Add the aliasing system Doug uses.
 
