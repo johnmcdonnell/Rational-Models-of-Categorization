@@ -25,7 +25,10 @@ class particlefilter():
     def __init__(self, args, m):
         self.args = args
         self.m = m
-        self.particles = [particle.RationalParticle(self.args, decision="Soft") for _ in xrange(self.m)]
+        self.particles = []
+        for i in xrange( self.m ):
+            self.particles.append( particle.RationalParticle(self.args, decision="Soft") )
+            self.particles[-1].id = i
     
     def findrespdist(self, stim, env):
         res= [ s.findmapval(stim, env) for s in self.particles]
@@ -53,6 +56,17 @@ class particlefilter():
         res = [s.partition for s in self.particles]
         return res
     
+    def uniquepartitions(self):
+        ret = {}
+        parts = self.getfullpartition()
+        for i in xrange( len( parts ) ):
+            part = tuple( parts[i] )
+            if not part in ret.keys():
+                ret[ part ] = [i]
+            else:
+                ret[ part ].append( i )
+        return ret
+    
     def iterate(self, stim ):
         #for id in xrange( len( self.particles ) ):
         #    self.particles[id].register_item( stim )
@@ -65,9 +79,15 @@ class particlefilter():
         
         # TODO: implement self.ids, useful for aliasing identical particles
         ppost = posteriors / sum( posteriors )
+        #print ppost
         
         samples = [ int( sum( np.cumsum(ppost) < nprand.random() ) ) for _ in xrange( self.m ) ]
         samplesenum = [ [id, samples.count(id)] for id in xrange( len(self.particles) ) ]
+        #for s in samples:
+        #    print s,
+        #    print self.particles[s].id
+        print "Unique partitions:"
+        print self.uniquepartitions()
         
         newparticles = []
         #newids = [] (for aliasing)
@@ -75,6 +95,7 @@ class particlefilter():
         for id, count in samplesenum:
             if count > 0:
                 for i in xrange(count):
+                    # The whole deepcopy thing definitely works...
                     newparticles.append(copy.deepcopy(self.particles[id]))
                     newparticles[-1].additemBayes( stimnum )
         
@@ -112,23 +133,24 @@ def testcontinuous():
     stims, labels = get_zmstims(100)
     types = 'cc'
     
-    Cparam = .65
+    Cparam = .6
     mu0 = np.mean( stims, 0 )
     sigma0 = np.var( stims, 0 )
     lambda0 = np.ones( len(stims[0]) )
     a0 = np.ones( len(stims[0]) )
     
     args = [Cparam, mu0, sigma0, lambda0, a0, types]
-    m = 6  # Just one particle for demonstration purposes.
+    m = 10
     
     model = particlefilter(args, m)
-    for s in stims:
+    for i, s in enumerate( stims ):
+        print i
         #model.findMAPval(stim, 'cc?')
         model.iterate(s)
         #model.getnclusters()
     
     import pylab as pl
-    pl.suptitle( "Six particles from a single run." )
+    pl.suptitle( "6 of %d particles from a single run." % m )
     partitions = model.getfullpartition()
     for particle in range( 6 ):
         thispartition = partitions[particle]
@@ -144,6 +166,7 @@ def testcontinuous():
             pl.plot( thesepoints[:,0], thesepoints[:,1], 'o' )
         #print "Actual labels (left) vs. model partition (right)"
         #print cols[order]
+    pl.show()
 
 
 def main():

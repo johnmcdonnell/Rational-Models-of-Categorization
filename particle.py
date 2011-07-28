@@ -13,7 +13,7 @@ import scipy.stats.distributions as dist
 
 #import pdb
 
-VERBOSE = True
+VERBOSE = False
 
 #Utility functions:
 
@@ -541,5 +541,5 @@ def main():
 #    VERBOSE = False
 
 if __name__ == '__main__':
-    #VERBOSE = True
+    VERBOSE = True
     main()
